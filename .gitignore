@@ -2,6 +2,7 @@ data/*
 tu/*
 files/*
 
+.ipynb_checkpoints/*
 */.ipynb_checkpoints/*
 */*/.ipynb_checkpoints/*
 */*/*/.ipynb_checkpoints/*
