@@ -41,7 +41,7 @@
             --draw_post_path /home/zzm/tmp/test-sti-data/field-draw \
             --label_pre_path /home/zzm/tmp/test-sti-data/field-label-post/
         ```
-    - 使用草图标注系统Annotation sketch,人工标注
+    - 使用草图标注系统Annotation sketcch,人工标注
     
 - 后期处理
     - 处理标注完成的数据,便于模型读取
@@ -54,3 +54,10 @@
             --coco_split train2017 \
             --scene field
         ```
+
+## 问题
+1. 22 pycharm matplotlib突然显示不了（20200108 17:27）
+解决： 新建了一个项目，然后重新远程连接，下载了工程又可以了
+
+2. 今天出现一个问题，标注工具有的显示不出来，直接显示thinkPHP那个页面。
+解决：后来发现文件开头没加那几个数字，还有就是有的caption自带‘\n’换行，造成有的行不能被解析
