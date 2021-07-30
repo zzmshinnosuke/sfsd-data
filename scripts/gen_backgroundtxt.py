@@ -48,7 +48,8 @@ def get_parser(prog='select image'):
 
     parser.add_argument('--type',
                         default='background_box',
-                        help='background,background_box')
+                        choices=['background','background_box'],
+                        help='background type')
     
     parser.add_argument('--config_file',
                         default='/home/zzm/tmp/teset-sti-data/background_box.txt',

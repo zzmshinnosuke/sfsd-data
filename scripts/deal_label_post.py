@@ -38,8 +38,9 @@ def get_parser(prog='deal post-label sketch'):
 
     parser.add_argument('--scene',
                         default='field',
+                        choices=['field','sport','vehicle'],
                         required=True,
-                        help='field,sport,vehicle')
+                        help='scene type')
 
     return parser
 
