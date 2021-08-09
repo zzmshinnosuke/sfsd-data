@@ -304,6 +304,8 @@ class Sketch(Base):
                 ob["category"]="grass"
             if ob["category"]=="trees":
                 ob["category"]="tree"
+            if ob["category"]=="stones":
+                ob["category"]="stone"
             if ob["category"]=="fore_others" or ob["category"] in less100_cats:
                 ob["category"]="others"
             if ob["category"]=="useless":
