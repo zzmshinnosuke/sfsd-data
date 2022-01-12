@@ -16,6 +16,7 @@ from pycocotools.coco import COCO
 from shutil import copyfile
 import random
 from tqdm import tqdm as tqdm
+import math
 
 from .base import Base
 
@@ -39,6 +40,13 @@ class Stroke:
     
     def get_points(self):
         return self.points
+    
+    def get_stroke_len(self):
+        points=self.points
+        stroke_len=0.0
+        for i in range(1,len(points)):
+            stroke_len+=(math.sqrt(pow(points[i][0]-points[i-1][0],2)+pow(points[i][1]-points[i-1][1],2)))
+        return stroke_len
 
 class Item:
     def __init__(self, item,color=True):

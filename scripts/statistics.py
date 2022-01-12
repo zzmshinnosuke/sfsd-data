@@ -8,100 +8,117 @@ from sketch import Sketch
 import argparse
 import os
 from tqdm import tqdm
+import numpy as np
 
-def statistics_point_len(sketches):
+def sta_sketch_point_num(sketches,interval=1000):
     '''
     统计每个草图包含的点数
     '''
-    sizes=list()
-    sizes0=0
-    sizes1=0
-    sizes2=0
-    sizes3=0
-    sizes4=0
-    for sketch in tqdm(sketches):
-        sizes.append(sketch.get_points_len())
-        if sketch.get_points_len()>5000:
-            sizes0+=1
-        if sketch.get_points_len()>10000:
-            sizes1+=1
-        if sketch.get_points_len()>20000:
-            sizes2+=1
-        if sketch.get_points_len()>30000:
-            sizes3+=1
-        if sketch.get_points_len()>40000:
-            print(sketch.sketch_path,sketch.scene)
-            sizes4+=1           
     print("统计每个草图包含的点数:")
-    print('max seq_len is {}'.format(max(sizes),min(sizes)))
-    print(sizes0,sizes1,sizes2,sizes3,sizes4)
-    return sizes
+    
+    point_lens=list()
+    res=dict()
+    for sketch in tqdm(sketches):
+        point_len=sketch.get_points_len()
+        point_lens.append(point_len)
+        div=point_len//interval
+        temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+        if temp_name in res.keys():
+            res[temp_name]+=1 
+        else :
+            res[temp_name]=1 
+    
+    print('max seq_len is {},min seq_len is {},mean seq_len is {}'.format(max(point_lens),min(point_lens),np.mean(point_lens)))
+    print(res)
 
-def statistics_stroke_len(sketches):
+def sta_sketch_stroke_num(sketches,interval=100):
     '''
     统计每个草图包含的笔画数
     '''
-    sizes=list()
-    sizes0=0
-    sizes1=0
-    sizes2=0
-    sizes3=0
-    sizes4=0
     print("统计每个草图包含的笔画数:")
-    for sketch in tqdm(sketches):
-        sizes.append(sketch.get_strokes_len())
-        if sketch.get_strokes_len()>100:
-            sizes0+=1
-        if sketch.get_strokes_len()>200:
-            sizes1+=1
-        if sketch.get_strokes_len()>300:
-            sizes2+=1
-        if sketch.get_strokes_len()>500:
-            sizes3+=1
-        if sketch.get_strokes_len()>1000:
-            sizes4+=1           
-        
-    print('max stroke_len is {},min stroke_len is {}'.format(max(sizes),min(sizes)))
-    print('>100 is{},>200 is{},>300 is{},>500 is{},>1000 is{}'.format(sizes0,sizes1,sizes2,sizes3,sizes4))
     
-def statistics_stroke_point_len(sketches):
+    stroke_lens=list()
+    res=dict()
+    for sketch in tqdm(sketches):
+        stroke_len=sketch.get_strokes_len()
+        stroke_lens.append(stroke_len)
+        div=stroke_len//interval
+        temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+        if temp_name in res.keys():
+            res[temp_name]+=1 
+        else :
+            res[temp_name]=1      
+            
+    print('all stroke_len is {},max stroke_len is {},min stroke_len is {},mean stroke_len is {}'.format(sum(stroke_lens),max(stroke_lens),min(stroke_lens),np.mean(stroke_lens)))
+    print(res)
+    
+def sta_sketch_object_num(sketches):
+    '''
+    统计每个草图中的物体数
+    '''
+    print("统计每个草图包含的物体数:")
+    interval=1
+    object_lens=list()
+    res=dict()
+    for sketch in tqdm(sketches):
+        object_len=len(sketch.get_items())
+        object_lens.append(object_len)
+        temp_name='{}:'.format(str(object_len))
+        if temp_name in res.keys():
+            res[temp_name]+=1 
+        else :
+            res[temp_name]=1 
+        
+    print('all objects_len is {}, max objects_len is {}, min objects_len is {},  mean objects_len is {}'.format(sum(object_lens),max(object_lens),min(object_lens),np.mean(object_lens)))
+    print(res)
+    
+def sta_stroke_point_num(sketches,interval=100):
     '''
     统计每个笔画包含的点数
     '''
-    sizes=list()
-    sizes10=0
-    sizes20=0
-    sizes0=0
-    sizes1=0
-    sizes2=0
-    sizes3=0
-    sizes4=0
-    print("统计每个笔画包含的点数:")
+    print("统计每个笔画的采样点数:")
+    
+    point_lens=list()
+    res=dict()
     for sketch in tqdm(sketches):
         strokes=sketch.get_strokes()
         for stroke in strokes:
-            sizes.append(stroke.get_points_len())
-            if stroke.get_points_len()<10:
-                sizes10+=1
-            if stroke.get_points_len()<20:
-                sizes20+=1
-            if stroke.get_points_len()>250:
-                sizes0+=1
-            if stroke.get_points_len()>500:
-                sizes1+=1
-            if stroke.get_points_len()>1000:
-                sizes2+=1
-            if stroke.get_points_len()>1500:
-                sizes3+=1
-            if stroke.get_points_len()>2000:
-                print(sketch.sketch_path,sketch.scene)
-                sizes4+=1 
+            point_len=stroke.get_points_len()
+            point_lens.append(point_len)
+            div=point_len//interval
+            temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+            if temp_name in res.keys():
+                res[temp_name]+=1 
+            else :
+                res[temp_name]=1 
     
-    print('the number of all strokes is {}'.format(len(sizes)))
-    print('max stroke_point_len is {},min stroke_point_len is {}'.format(max(sizes),min(sizes)))
-    print('<10 is{},<20 is{},>250 is{},>500 is{},>1000 is{},>1500 is{},>2000 is{}'.format(sizes10,sizes20,sizes0,sizes1,sizes2,sizes3,sizes4))
+    print('max stroke_point_len is {},min stroke_point_len is {}, std stroke_point_len is {}, mean stroke_point_len is {}'.format(max(point_lens),min(point_lens),np.std(point_lens),np.mean(point_lens)))
+    print(res)
+    
+def sta_stroke_length_num(sketches,interval=100):
+    '''
+    统计笔画不同长度个数
+    '''
+    print("统计笔画不同长度个数:")
+    
+    stroke_lens=list()
+    res=dict()
+    for sketch in tqdm(sketches):
+        strokes=sketch.get_strokes()
+        for stroke in strokes:
+            stroke_len=stroke.get_stroke_len()
+            stroke_lens.append(stroke_len)
+            div=int(stroke_len)//interval
+            temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+            if temp_name in res.keys():
+                res[temp_name]+=1 
+            else :
+                res[temp_name]=1 
+    
+    print('max stroke_length_len is {},min stroke_length_len is {}, mean stroke_length_len is {}'.format(max(stroke_lens),min(stroke_lens),np.mean(stroke_lens)))
+    print(res)
         
-def statistics_num_of_every_cat(sketches):
+def sta_num_of_every_cat(sketches):
     '''
     统计每个类别物体的个数
     '''
@@ -141,20 +158,58 @@ def get_parser(prog='statistics sketch'):
     parser=argparse.ArgumentParser(prog)
 
     parser.add_argument('--sketch_path',
-                        default='/home/zzm/tmp/sketch',
+                        default='~/tmp/sketch',
                         required=True,
                         help='the path of sketch')
+    parser.add_argument('--sketch_point_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of points in every sketch')
+    parser.add_argument('--sketch_stroke_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of strokes in every sketch')
+    parser.add_argument('--sketch_object_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of objects in every sketch')
+    parser.add_argument('--stroke_point_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of points in every stroke')
+    parser.add_argument('--stroke_length_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of every stroke length')
+    parser.add_argument('--cat_object_num',
+                        type=bool,
+                        default=False,
+                        help='statistic the number of objects in every cat')
+    parser.add_argument('--interval',
+                        type=int,
+                        default=100,
+                        help='the interval to statistics')
     
-    return parser
+    return parser.parse_args()
+
+# python scripts/statistics.py --sketch_path ~/tmp/sketch --sketch_point_num True --interval 1000
 
 if __name__ == '__main__':
-    parser=get_parser()
-    args=parser.parse_args()
+    args=get_parser()
     sketches_json=[file for file in os.listdir(args.sketch_path) if os.path.isfile(os.path.join(args.sketch_path, file))]
     sketches=get_all_sketches(args.sketch_path,sketches_json)
-    statistics_point_len(sketches)
-    statistics_stroke_len(sketches)
-    statistics_stroke_point_len(sketches)
-    cat_num,less100_cats=statistics_num_of_every_cat(sketches)
+
+    if args.sketch_point_num:
+        sta_sketch_point_num(sketches,args.interval)
+    if args.sketch_stroke_num:
+        sta_sketch_stroke_num(sketches,args.interval)
+    if args.sketch_object_num:
+        sta_sketch_object_num(sketches)
+    if args.stroke_point_num:
+        sta_stroke_point_num(sketches,args.interval)
+    if args.stroke_length_num:
+        sta_stroke_length_num(sketches)
+    if args.cat_object_num:
+        cat_num,less100_cats=sta_num_of_every_cat(sketches)
 #     change_sketch_catogery(sketches,less100_cats)
     
