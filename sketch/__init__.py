@@ -1,4 +1,4 @@
-#!/usr/bin/env python333
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Created on 2021-07-18 16:14:51
 # @Author: zzm

@@ -1,4 +1,4 @@
-#!/usr/bin/env python333
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Created on 2021-07-20 21:51:06
 # @Author: zzm
@@ -22,14 +22,16 @@ def sta_sketch_point_num(sketches,interval=1000):
         point_len=sketch.get_points_len()
         point_lens.append(point_len)
         div=point_len//interval
-        temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+        temp_name=(div+1)*interval
         if temp_name in res.keys():
             res[temp_name]+=1 
         else :
             res[temp_name]=1 
     
+    sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False) 
     print('max seq_len is {},min seq_len is {},mean seq_len is {}'.format(max(point_lens),min(point_lens),np.mean(point_lens)))
-    print(res)
+    print(sorted_res)
+    print(dict(sorted_res).keys(),dict(sorted_res).values())
 
 def sta_sketch_stroke_num(sketches,interval=100):
     '''
@@ -43,14 +45,16 @@ def sta_sketch_stroke_num(sketches,interval=100):
         stroke_len=sketch.get_strokes_len()
         stroke_lens.append(stroke_len)
         div=stroke_len//interval
-        temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+        temp_name=(div+1)*interval
         if temp_name in res.keys():
             res[temp_name]+=1 
         else :
             res[temp_name]=1      
             
+    sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False)    
     print('all stroke_len is {},max stroke_len is {},min stroke_len is {},mean stroke_len is {}'.format(sum(stroke_lens),max(stroke_lens),min(stroke_lens),np.mean(stroke_lens)))
-    print(res)
+    print(sorted_res)
+    print(dict(sorted_res).keys(),dict(sorted_res).values())
     
 def sta_sketch_object_num(sketches):
     '''
@@ -63,14 +67,16 @@ def sta_sketch_object_num(sketches):
     for sketch in tqdm(sketches):
         object_len=len(sketch.get_items())
         object_lens.append(object_len)
-        temp_name='{}:'.format(str(object_len))
+        temp_name=object_len
         if temp_name in res.keys():
             res[temp_name]+=1 
         else :
             res[temp_name]=1 
-        
+    
+    sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False)
     print('all objects_len is {}, max objects_len is {}, min objects_len is {},  mean objects_len is {}'.format(sum(object_lens),max(object_lens),min(object_lens),np.mean(object_lens)))
-    print(res)
+    print(sorted_res)
+    print(dict(sorted_res).keys(),dict(sorted_res).values())
     
 def sta_stroke_point_num(sketches,interval=100):
     '''
@@ -86,14 +92,16 @@ def sta_stroke_point_num(sketches,interval=100):
             point_len=stroke.get_points_len()
             point_lens.append(point_len)
             div=point_len//interval
-            temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+            temp_name=(div+1)*interval
             if temp_name in res.keys():
                 res[temp_name]+=1 
             else :
                 res[temp_name]=1 
     
+    sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False)
     print('max stroke_point_len is {},min stroke_point_len is {}, std stroke_point_len is {}, mean stroke_point_len is {}'.format(max(point_lens),min(point_lens),np.std(point_lens),np.mean(point_lens)))
-    print(res)
+    print(sorted_res)
+    print(dict(sorted_res).keys(),dict(sorted_res).values())
     
 def sta_stroke_length_num(sketches,interval=100):
     '''
@@ -109,14 +117,16 @@ def sta_stroke_length_num(sketches,interval=100):
             stroke_len=stroke.get_stroke_len()
             stroke_lens.append(stroke_len)
             div=int(stroke_len)//interval
-            temp_name='{}-{}:'.format(str((div)*interval),str((div+1)*interval))
+            temp_name=(div+1)*interval
             if temp_name in res.keys():
                 res[temp_name]+=1 
             else :
                 res[temp_name]=1 
     
+    sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False)
     print('max stroke_length_len is {},min stroke_length_len is {}, mean stroke_length_len is {}'.format(max(stroke_lens),min(stroke_lens),np.mean(stroke_lens)))
-    print(res)
+    print(sorted_res)
+    print(dict(sorted_res).keys(),dict(sorted_res).values())
         
 def sta_num_of_every_cat(sketches):
     '''
@@ -142,9 +152,21 @@ def sta_num_of_every_cat(sketches):
     print(len(cat_num),cat_num,num,all_nums)
     return cat_num,less100_cats
 
+def read_config(configfile="background_box.txt"):
+    '''
+    读取配置文件中的文件
+    '''
+    assert os.path.exists(configfile),'not find {}'.format(configfile)
+    res=[]
+    with open(configfile, 'r') as f:
+        for line in f:
+            line=line.strip('\n')
+            res.append(line.split(';')[0])
+    return res
+
 def change_sketch_catogery(sketches,less100_cats):
     for sketch in tqdm(sketches):
-        sketch.save_new_json('/home/zzm/tmp/sketch2',less100_cats)    
+        sketch.save_new_json('~/tmp/sketch2',less100_cats)    
     
 def get_all_sketches(path,sketches_json):
     print("load sketch json:")
@@ -208,7 +230,7 @@ if __name__ == '__main__':
     if args.stroke_point_num:
         sta_stroke_point_num(sketches,args.interval)
     if args.stroke_length_num:
-        sta_stroke_length_num(sketches)
+        sta_stroke_length_num(sketches,args.interval)
     if args.cat_object_num:
         cat_num,less100_cats=sta_num_of_every_cat(sketches)
 #     change_sketch_catogery(sketches,less100_cats)
