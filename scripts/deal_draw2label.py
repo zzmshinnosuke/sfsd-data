@@ -28,4 +28,4 @@ if __name__ == '__main__':
     parser=get_parser()
     args=parser.parse_args()
     d2l=Drwa2Label(args.draw_post_path,args.label_pre_path)
-    d2l.generate()
+    d2l.generate() 
