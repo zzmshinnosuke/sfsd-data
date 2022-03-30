@@ -26,8 +26,8 @@ def replace_stroke(old_label_end_path, new_label_pre_path, new_label_end_path):
 #     print(files)
     for file in tqdm(files):
         new_sketch = {}
-        sketch_OLE = read_json(old_label_end_path,file)
-        sketch_NLP = read_json(new_label_pre_path,file)
+        sketch_OLE = read_json(old_label_end_path, file)
+        sketch_NLP = read_json(new_label_pre_path, file)
         new_sketch["reference"] = sketch_NLP["reference"]
         new_sketch["resolution"] = sketch_NLP["resolution"]
         new_sketch["scene"] = sketch_NLP["scene"]
@@ -62,6 +62,18 @@ def replace_stroke(old_label_end_path, new_label_pre_path, new_label_end_path):
             print("strokes number error {}:{},{}".format(file,str(stroke_len_OLE),str(len(sketch_NLP["strokes"]))))
         with open(os.path.join(new_label_end_path, file), "w") as f:
             json.dump(new_sketch, f)
+            
+def repalce_catetory(old_label_end_path, new_label_end_path):
+    files=[file for file in os.listdir(old_label_end_path) if os.path.isfile(os.path.join(old_label_end_path, file))]
+    for file in tqdm(files):
+        sketch = read_json(old_label_end_path, file)
+        for obj in sketch["objects"]:
+            if obj["category"] == "grasses":
+                obj["category"] = "grass"
+            if obj["category"] == "stones":
+                obj["category"] = "stone"
+        with open(os.path.join(new_label_end_path, file), "w") as f:
+            json.dump(sketch, f)
     
 def get_parser(prog='new sketch'):
     parser=argparse.ArgumentParser(prog)
@@ -86,4 +98,5 @@ def get_parser(prog='new sketch'):
 if __name__ == '__main__':
     args = get_parser()
 
-    replace_stroke(args.old_label_end_path, args.new_label_pre_path, args.new_label_end_path)
+#     replace_stroke(args.old_label_end_path, args.new_label_pre_path, args.new_label_end_path)
+    repalce_catetory(args.old_label_end_path, args.new_label_end_path)
