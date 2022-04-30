@@ -11,13 +11,16 @@ from .base import Base
 
 '''
 绘制之后的数据保存了原始数据，很多没用的东西也保存下来了，把没用的数据都去掉
-'''
+''' 
 
-class Drwa2Label(Base):
-    def __init__(self,draw_dir,save_dir):
+class Draw2Label(Base):
+    def __init__(self,draw_dir, save_dir, filename):
         self.draw_dir=draw_dir
         self.save_dir=save_dir
-        self.draws=[file for file in os.listdir(self.draw_dir) if os.path.isfile(os.path.join(self.draw_dir, file))]
+        if filename != "":
+            self.files = [filename]
+        else:
+            self.files=[file for file in os.listdir(self.draw_dir) if os.path.isfile(os.path.join(self.draw_dir, file))]
     
     def dealDraw(self,content):
         res={}
@@ -57,8 +60,7 @@ class Drwa2Label(Base):
         return res
     
     def generate(self):
-        i = 0
-        for draw in tqdm(self.draws):
-            draw_json=self.readJson(os.path.join(self.draw_dir, draw))
+        for file in tqdm(self.files):
+            draw_json=self.readJson(os.path.join(self.draw_dir, file))
             label_json=self.dealDraw(draw_json)
-            self.saveJson(os.path.join(self.save_dir, draw),label_json)
+            self.saveJson(os.path.join(self.save_dir, file), label_json)

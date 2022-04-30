@@ -90,7 +90,6 @@ class Base():
         print('Copy Complete!')
         return 0
 
-
     def showImage(self, image_id):
         '''
         显示一张图像，可以是matrix，也可以是coco Image object
@@ -120,6 +119,18 @@ class Base():
         anns = self.coco.loadAnns(annIds)
         self.coco.showAnns(anns)
         plt.show()
+        
+    def getCurImageCatsByImgId(self, image_id):
+        '''
+        得到当前图像包含的哪些类别
+        ：param image_id
+        : return:
+        '''
+        OImage = self.coco.loadImgs(image_id)[0]
+        annIds = self.coco.getAnnIds(imgIds = OImage['id'], iscrowd = None)
+        anns = self.coco.loadAnns(annIds)
+        for ann in anns:
+            print(self.getCatNameFCatId(ann['category_id']))
 
     def showSegMask(self, image_id):
         '''
@@ -199,7 +210,6 @@ class Base():
         Oimages = self.coco.loadImgs(ids=ids)
         coconames=[]
         for Oimage in Oimages:
-            #print(Oimage)
             coconames.append(Oimage['file_name'])
         print("文件数:",len(coconames))
         return ids,coconames
@@ -216,3 +226,7 @@ class Base():
     def saveJson(self,path,content):
         with open(path, "w") as f:
             json.dump(content, f)
+
+if __name__ == '__main__':
+    base=Base('/home/zzm/datasets/coco2017/', 'train2017')
+    base.getCurImageCatsByImgId(37012)

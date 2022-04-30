@@ -147,28 +147,25 @@ class Item:
         return img
 
 class Sketch(Base):
-    Foreground_category = list(set(foreground1+foreground2+foreground3))
-    Background_category = list(set(background1+background2+background3))
+    Foreground_category = list(set(foreground1 + foreground2 + foreground3))
+    Background_category = list(set(background1 + background2 + background3))
 
-    def __init__(self, sketch_path=None,useless=True,color=True):
+    def __init__(self, sketch_path = None, useless = True, color = True):
         self.sketch_path=sketch_path
 #         self.image_path=image_path
         self.useless = useless  # 是否保留无用的物体,True不保留，False保留
         self.color = color
-        
-#         assert os.path.isfile(self.image_path)
-#         self.image=np.array(Image.open(os.path.join(self.image_path)))
         assert os.path.isfile(self.sketch_path)
         self.load()
-        
-            
+               
     def load(self):
-        self.sketch_json=self.readJson(self.sketch_path)
-        self.resolution=self.sketch_json["resolution"]
-        self.image_name=self.sketch_json["filename"]
-        self.captions=self.sketch_json["captions"]
-        self.scene=self.sketch_json["scene"]
-        self.items=list()
+        self.sketch_json = self.readJson(self.sketch_path)
+        self.sketch_name = os.path.basename(self.sketch_path)
+        self.resolution = self.sketch_json["resolution"]
+        self.image_name = self.sketch_json["reference"]
+        self.scene = self.sketch_json["scene"]
+        self.drawer = self.sketch_json["drawer"]
+        self.items = list()
         for item in self.sketch_json["objects"]:
             if self.useless and item["category"] == "useless":
                 continue
@@ -304,7 +301,6 @@ class Sketch(Base):
         sketch={}
         sketch['filename']=self.sketch_json["filename"]
         sketch['resolution']=self.sketch_json["resolution"]
-        sketch['captions']=self.sketch_json["captions"]
         sketch['scene']=self.sketch_json["scene"]
         object_json=[]
         for ob in self.sketch_json["objects"]:

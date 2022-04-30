@@ -23,13 +23,7 @@ def get_parser(prog='deal sketch to model'):
                         default='/home/zzm/tmp/sketch',
                         required=True,
                         help='the path of sketch')
-    
     return parser
-
-
-        
-        
-
 
 if __name__ == '__main__':
     parser=get_parser()

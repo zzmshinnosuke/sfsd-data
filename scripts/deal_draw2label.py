@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Created on 2021-07-19 22:00:09
 # @Author: zzm
-from sketch import Drwa2Label
+from sketch import Draw2Label
 
 import argparse
 import os
@@ -22,10 +22,14 @@ def get_parser(prog='select image'):
                         default="/home/zzm/tmp/data",
                         help='the path of pre-label, deal draw sketch and save here')
     
+    parser.add_argument('--filename',
+                        default = "",
+                        help = 'just deal single sketch file')
+    
     return parser
 
 if __name__ == '__main__':
-    parser=get_parser()
-    args=parser.parse_args()
-    d2l=Drwa2Label(args.draw_post_path,args.label_pre_path)
+    parser = get_parser()
+    args = parser.parse_args()
+    d2l = Draw2Label(args.draw_post_path, args.label_pre_path, args.filename)
     d2l.generate() 

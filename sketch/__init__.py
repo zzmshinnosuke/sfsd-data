@@ -5,5 +5,6 @@
 
 from .base import Base
 from .labelpost import LabelPost
-from .draw2label import Drwa2Label
+from .draw2label import Draw2Label
+from .label2draw import Label2Draw
 from .sketch import Sketch
