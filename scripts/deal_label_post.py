@@ -33,6 +33,6 @@ if __name__ == '__main__':
     parser=get_parser()
     args=parser.parse_args()
     lp=LabelPost(args.label_post_path, args.root_coco_path, args.coco_split)
-    # lp.split_train_test("/home/zzm/tmp/sketch1")
-    lp.generate(args.save_path)
+    lp.split_train_test("/home/zzm/tmp/SFSD-spg-200/", test_num = 1000)
+    # lp.generate(args.save_path)
     # lp.get_split("/home/zzm/datasets/STI", "/home/zzm/datasets/SFSD-new")

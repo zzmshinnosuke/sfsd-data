@@ -32,12 +32,25 @@ def seek_sketches_by_strokes_num(path, sketches_json, num):
             print(sketch_json, sketch.get_strokes_len())
     print("the nummber is: ", count)
     
+def seek_sketches_by_strokes_num_less(path, save_path, sketches_json, num):
+    count = 0
+    for sketch_json in tqdm(sketches_json):
+        sketch = Sketch(sketch_path = os.path.join(path, sketch_json))
+        if sketch.get_strokes_len() < num:
+            count += 1
+            # print(sketch_json, sketch.get_strokes_len())
+            sketch.saveJson(os.path.join(save_path, sketch.sketch_name), sketch.sketch_json)
+    print("the nummber is: ", count)
+    
 def get_parser(prog='statistics sketch'):
     parser=argparse.ArgumentParser(prog)
 
     parser.add_argument('--sketch_path',
                         default = '~/datasets/sfsd-data/label-end/results1',
                         required = True,
+                        help='the path of sketch')
+    parser.add_argument('--save_path',
+                        default = '/home/zzm/tmp/sketch',
                         help='the path of sketch')
     parser.add_argument('--category',
                         default = 'tree',
@@ -56,6 +69,6 @@ def get_parser(prog='statistics sketch'):
 if __name__ == '__main__':
     args = get_parser()
     sketches_json = [file for file in os.listdir(args.sketch_path) if os.path.isfile(os.path.join(args.sketch_path, file))]
-    seek_sketches_by_cat(args.sketch_path, sketches_json, args.category)
-
-    # seek_sketches_by_strokes_num(args.sketch_path, sketches_json, args.stroke_num)
+    # seek_sketches_by_cat(args.sketch_path, sketches_json, args.category)
+    
+    seek_sketches_by_strokes_num_less(args.sketch_path, args.save_path, sketches_json, args.stroke_num)

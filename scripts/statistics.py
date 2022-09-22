@@ -10,6 +10,39 @@ import os
 from tqdm import tqdm
 import numpy as np
 
+def sta_sketch_category_num(sketches,interval=10):
+    '''
+    统计每个草图包含物体最多、最少、平均类别数
+    '''
+    print("统计每个草图包含的物体类别数:")
+    cat_nums = list()
+    res = dict()
+    for sketch in tqdm(sketches):
+        cat_num = len(sketch.get_all_category())
+        cat_nums.append(cat_num)
+        
+    print('max seq_len is {},min seq_len is {},mean seq_len is {}'.format(max(cat_nums),min(cat_nums),np.mean(cat_nums)))
+
+def sta_category_sketch_num(sketches,interval=1000):
+    '''
+    统计每个类别物体出现的最多、最少、平均草图数
+    '''
+    print("统计每个类别物体出现的草图数:")
+    
+    sketch_nums = list()
+    cats = list()
+    res = dict()
+    for sketch in tqdm(sketches):
+        cat = sketch.get_all_category()
+        cats.extend(cat)
+    
+    cats_set = set(cats)
+    for cat in cats_set:
+        sketch_nums.append(cats.count(cat))
+    
+    print('max seq_len is {}, min seq_len is {}, mean seq_len is {}'.format(max(sketch_nums), min(sketch_nums), np.mean(sketch_nums)))
+
+
 def sta_sketch_point_num(sketches,interval=1000):
     '''
     统计每个草图包含的点数
@@ -190,6 +223,14 @@ def get_parser(prog='statistics sketch'):
                         default='~/tmp/sketch',
                         required=True,
                         help='the path of sketch')
+    parser.add_argument('--sketch_cat_num',
+                    type=bool,
+                    default=False,
+                    help='statistic the number of object category in every sketch')
+    parser.add_argument('--cat_sketch_num',
+                    type=bool,
+                    default=False,
+                    help='statistic the number of sketch in every category')
     parser.add_argument('--sketch_point_num',
                         type=bool,
                         default=False,
@@ -242,5 +283,10 @@ if __name__ == '__main__':
         cat_num,less100_cats=sta_num_of_every_cat(sketches)
         print(cat_num)
         print(less100_cats)
+    if args.sketch_cat_num:
+        sta_sketch_category_num(sketches,args.interval)
+    if args.cat_sketch_num:
+        sta_category_sketch_num(sketches,args.interval)
 #     change_sketch_catogery(sketches,less100_cats)
+
     
