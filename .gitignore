@@ -1,7 +1,7 @@
 data/*
 tu/*
 files/*
-
+.vscode/*
 .ipynb_checkpoints/*
 */.ipynb_checkpoints/*
 */*/.ipynb_checkpoints/*

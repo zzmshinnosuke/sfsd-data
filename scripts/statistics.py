@@ -31,7 +31,6 @@ def sta_category_sketch_num(sketches,interval=1000):
     
     sketch_nums = list()
     cats = list()
-    res = dict()
     for sketch in tqdm(sketches):
         cat = sketch.get_all_category()
         cats.extend(cat)
@@ -98,7 +97,6 @@ def sta_sketch_object_num(sketches):
     统计每个草图中的物体数
     '''
     print("统计每个草图包含的物体数:")
-    interval=1
     object_lens=list()
     res=dict()
     for sketch in tqdm(sketches):
