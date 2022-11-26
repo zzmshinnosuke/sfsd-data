@@ -190,6 +190,15 @@ def sta_num_of_every_cat(sketches):
     print(len(cat_num), cat_num, num, all_nums)
     return cat_num, less100_cats
 
+def sta_width_height(sketches):
+    widths = list()
+    heights = list()
+    for sketch in tqdm(sketches):
+        width, height = sketch.resolution
+        widths.append(width)
+        heights.append(height)
+    print("max width is {}, min width is {}. max height is {}, min height is {}".format(np.max(widths), np.min(widths), np.max(heights), np.min(heights)))
+
 def read_config(configfile="background_box.txt"):
     '''
     读取配置文件中的文件
@@ -253,6 +262,10 @@ def get_parser(prog='statistics sketch'):
                         type=bool,
                         default=False,
                         help='statistic the number of objects in every cat')
+    parser.add_argument('--sta_width_height',
+                        type=bool,
+                        default=False,
+                        help='statistic the width and height of sketches')
     parser.add_argument('--interval',
                         type=int,
                         default=100,
@@ -260,13 +273,13 @@ def get_parser(prog='statistics sketch'):
     
     return parser.parse_args()
 
-# python scripts/statistics.py --sketch_path ~/tmp/sketch --sketch_point_num True --interval 1000
+# python scripts/statistics.py --sketch_path ~/datasets/SFSD/sketch --sketch_point_num True --interval 1000
 
 if __name__ == '__main__':
     args=get_parser()
     sketches_json=[file for file in os.listdir(args.sketch_path) if os.path.isfile(os.path.join(args.sketch_path, file))]
-    sketches=get_all_sketches(args.sketch_path,sketches_json)
-
+    sketches=get_all_sketches(args.sketch_path, sketches_json)
+    print("the number of sketches is {}".format(len(sketches)))
     if args.sketch_point_num:
         sta_sketch_point_num(sketches,args.interval)
     if args.sketch_stroke_num:
@@ -286,5 +299,5 @@ if __name__ == '__main__':
     if args.cat_sketch_num:
         sta_category_sketch_num(sketches,args.interval)
 #     change_sketch_catogery(sketches,less100_cats)
-
-    
+    if args.sta_width_height:
+        sta_width_height(sketches)

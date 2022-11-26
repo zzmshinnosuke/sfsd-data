@@ -8,6 +8,7 @@ import numpy as np
 
 '''
 statistic SketchyScene dataset: the number of category of sketch, the number of sketches of category, the number of object of sketch  
+ 101 road, 102 mountain, 103 fence, 104 others
 '''
 
 def sta_sketch_category_num(sketches):
@@ -30,16 +31,19 @@ def sta_category_sketch_num(sketches):
     sketch_nums = list()
     for cat in cats_set:
         sketch_nums.append(cats.count(cat))
-    print("categroy number is {}".format(len(cats_set)))
+    print("categroy number is {}".format(len(cats_set)), cats_set)
     print('max sketch_num is {}, min sketch_num is {}, mean sketch_num is {}'.format(max(sketch_nums), min(sketch_nums), np.mean(sketch_nums)))
 
-def sta_sketch_object_num(sketches):
+def sta_sketch_object_num(sketches, sketches_mat):
     print("statistic mean/max/min object number of {} sketch:".format(len(sketches)))
     object_nums = list()
+    all_ids = list()
     for sketch in tqdm(sketches):
         sketch_list = list(set(sketch.flatten().tolist()))
         sketch_list.remove(0)
         object_nums.append(len(sketch_list))
+        all_ids.extend(sketch_list)
+    print(set(all_ids))
     print('max object_nums is {}, min object_nums is {}, mean object_nums is {}'.format(max(object_nums), min(object_nums), np.mean(object_nums)))
 
 def get_all_sketches(path, type):
@@ -51,7 +55,7 @@ def get_all_sketches(path, type):
     print("load dataset:")
     for sm in tqdm(sketches_mat):
         sketches.append(loadmat(sm)[type])
-    return sketches
+    return sketches, sketches_mat
 
 def get_parser(prog='statistics SketchyScene'):
     parser=argparse.ArgumentParser(prog)
@@ -73,16 +77,16 @@ def get_parser(prog='statistics SketchyScene'):
                         default=False,
                         help='statistic the number of objects in every sketch')
     return parser.parse_args()
-
+# python other_dataset/sketchyScene.py --root_path ~/datasets/SketchyScene-7k --sketch_cat_num True
 if __name__ == '__main__':
     args=get_parser()
 
     if args.sketch_object_num:
-        sketches=get_all_sketches(args.root_path, "INSTANCE_GT")
-        sta_sketch_object_num(sketches)
+        sketches, sketches_mat = get_all_sketches(args.root_path, "INSTANCE_GT")
+        sta_sketch_object_num(sketches, sketches_mat)
     if args.sketch_cat_num:
-        sketches=get_all_sketches(args.root_path, "CLASS_GT")
+        sketches, sketches_mat = get_all_sketches(args.root_path, "CLASS_GT")
         sta_sketch_category_num(sketches)
     if args.cat_sketch_num:
-        sketches=get_all_sketches(args.root_path, "CLASS_GT")
+        sketches, sketches_mat = get_all_sketches(args.root_path, "CLASS_GT")
         sta_category_sketch_num(sketches)
