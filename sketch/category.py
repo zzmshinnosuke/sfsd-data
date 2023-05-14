@@ -10,7 +10,7 @@ from re import I
 # {'cat2id': {'cloud': {'id': 0, 'color': [0, 191, 255]},...}, 'id2cat': {0: {'category': 'cloud', 'color': [0, 191, 255]},...}}
 
 background = ['boundary', 'fence', 'grass', 'mountain', 'playground', 'river', 'road', 'snowfield', 'stone',  'others'] 
-# house, tree, cloud 是单标的，应该不影响实例分割
+# house, tree, cloud 是单标的，应该不影响实例分割（20230103，重新标了测试集中的一些草图，发现有不少标的有错误，且很多画的也看不出是个啥。house、tree、cloud也有连着标的就没办法做实例分割了）
 def get_categories_info(root_path):
     filename = "categories_info.json"
     category_path = os.path.join(root_path, filename)

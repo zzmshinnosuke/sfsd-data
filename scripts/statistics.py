@@ -41,7 +41,6 @@ def sta_category_sketch_num(sketches,interval=1000):
     
     print('max seq_len is {}, min seq_len is {}, mean seq_len is {}'.format(max(sketch_nums), min(sketch_nums), np.mean(sketch_nums)))
 
-
 def sta_sketch_point_num(sketches,interval=1000):
     '''
     统计每个草图包含的点数
@@ -100,18 +99,20 @@ def sta_sketch_object_num(sketches):
     object_lens=list()
     res=dict()
     for sketch in tqdm(sketches):
-        object_len=len(sketch.get_items())
+        object_len = len(sketch.get_items())
         object_lens.append(object_len)
-        temp_name=object_len
+        temp_name = object_len
         if temp_name in res.keys():
             res[temp_name]+=1 
         else :
             res[temp_name]=1 
+        if object_len == 1:
+            print(sketch.sketch_name)
     
     sorted_res = sorted(res.items(), key=lambda item: item[0], reverse=False)
     print('all objects_len is {}, max objects_len is {}, min objects_len is {},  mean objects_len is {}'.format(sum(object_lens),max(object_lens),min(object_lens),np.mean(object_lens)))
     print(sorted_res)
-    print(dict(sorted_res).keys(),dict(sorted_res).values())
+    print(dict(sorted_res).keys(), dict(sorted_res).values())
     
 def sta_stroke_point_num(sketches,interval=100):
     '''
@@ -163,7 +164,7 @@ def sta_stroke_length_num(sketches,interval=100):
     print(sorted_res)
     print(dict(sorted_res).keys(),dict(sorted_res).values())
         
-def sta_num_of_every_cat(sketches):
+def sta_object_num_of_every_cat(sketches):
     '''
     统计每个类别物体的个数
     '''
@@ -179,16 +180,66 @@ def sta_num_of_every_cat(sketches):
                 
             if item.category == "suitcase":
                 print(sketch.sketch_name)
-    cat_num=sorted(cat_num.items(), key = lambda item:item[1], reverse = True)
-    less100_cats = list()
-    num = 0
-    for te in cat_num:
-        if te[1] < 100:
-            num += 1
-            less100_cats.append(te[0])
-    print("统计每个类别物体的个数:")
-    print(len(cat_num), cat_num, num, all_nums)
-    return cat_num, less100_cats
+#     cat_num=sorted(cat_num.items(), key = lambda item:item[1], reverse = True)
+#     less100_cats = list()
+#     num = 0
+#     for te in cat_num:
+#         if te[1] < 100:
+#             num += 1
+#             less100_cats.append(te[0])
+#     print("统计每个类别物体的个数:")
+#     print(len(cat_num), cat_num, num, all_nums)
+    
+    cat_by_name_origin = sorted(cat_num.items(), key = lambda item:item[0], reverse = False)
+    cat_by_name = dict(cat_by_name_origin)
+    others_num = cat_by_name.pop("others")
+    cat_name_nums = cat_by_name.values()
+    cat_name_nums = list(cat_name_nums)
+    cat_name_nums.append(others_num) 
+    
+    weights = np.array(cat_name_nums)
+    weights = np.median(weights) / weights
+    weights = np.around(weights, decimals = 2) #保留两位小数
+    
+    print("统计每个类别的笔画数:")
+    print(len(cat_by_name_origin), cat_by_name_origin)
+    weights = [str(w) for w in weights] # 方便直接复制过去使用
+    print("每个类别权值为：{}, 总共：{}".format((',').join(weights), len(weights)))
+    
+    return cat_num
+
+def sta_stroke_num_of_every_cat(sketches, interval=1000):
+    '''
+    统计每个类别的笔画数
+    '''
+    print("统计每个类别物体出现的草图数:")
+    
+    cat_num = dict()
+    all_nums = 0
+    for sketch in tqdm(sketches):
+        for item in sketch.get_items():
+            all_nums += item.get_strokes_len()
+            if item.category in cat_num:
+                cat_num[item.category] += item.get_strokes_len()
+            else:
+                cat_num[item.category] = item.get_strokes_len()
+    #按照名称顺序排序后，在将others类别的值放在最后，与类别定义的顺序保持一致，训练的时候可以直接给每个类别指定权值。
+    cat_by_name_origin = sorted(cat_num.items(), key = lambda item:item[0], reverse = False)
+    cat_by_name = dict(cat_by_name_origin)
+    others_num = cat_by_name.pop("others")
+    cat_name_nums = cat_by_name.values()
+    cat_name_nums = list(cat_name_nums)
+    cat_name_nums.append(others_num) 
+    
+    weights = np.array(cat_name_nums)
+    weights = np.median(weights) / weights
+    weights = np.around(weights, decimals = 2) #保留两位小数
+    
+    print("统计每个类别的笔画数:")
+    print(len(cat_num), cat_by_name_origin, all_nums)
+    weights = [str(w) for w in weights] # 方便直接复制过去使用
+    print("每个类别权值为：{}, 总共：{}".format((',').join(weights), len(weights)))
+    return cat_num
 
 def sta_width_height(sketches):
     widths = list()
@@ -262,6 +313,10 @@ def get_parser(prog='statistics sketch'):
                         type=bool,
                         default=False,
                         help='statistic the number of objects in every cat')
+    parser.add_argument('--cat_stroke_num',
+                    type=bool,
+                    default=False,
+                    help='statistic the number of stroke in every category')
     parser.add_argument('--sta_width_height',
                         type=bool,
                         default=False,
@@ -291,9 +346,9 @@ if __name__ == '__main__':
     if args.stroke_length_num:
         sta_stroke_length_num(sketches,args.interval)
     if args.cat_object_num:
-        cat_num,less100_cats=sta_num_of_every_cat(sketches)
-        print(cat_num)
-        print(less100_cats)
+        sta_object_num_of_every_cat(sketches)
+    if args.cat_stroke_num:
+        sta_stroke_num_of_every_cat(sketches)
     if args.sketch_cat_num:
         sta_sketch_category_num(sketches,args.interval)
     if args.cat_sketch_num:
