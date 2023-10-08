@@ -6,7 +6,6 @@
 from sketch import Base
 
 import argparse
-import os
 
 '''
 数据集创建的第一步，程序筛选图像，限制图像中的物体数，以及图像中物体的类别

@@ -15,7 +15,7 @@ import json
 from tqdm import tqdm
 
 class Base():
-    def __init__(self,cocoPath,dataType):
+    def __init__(self, cocoPath, dataType):
         self.cocoPath = cocoPath
         self.dataType = dataType
         self.InstancePath = '{}annotations/instances_{}.json'.format(self.cocoPath, dataType)
@@ -213,6 +213,12 @@ class Base():
             coconames.append(Oimage['file_name'])
         print("文件数:",len(coconames))
         return ids,coconames
+    
+    def load_captions(self, image_name):
+        id = int(image_name.split(".")[0])
+        annIds = self.coco_caption.getAnnIds(imgIds=int(id), iscrowd=None)
+        anns = self.coco_caption.loadAnns(annIds)
+        return [ann['caption'].strip() for ann in anns]
 
     def readJson(self,path):
         with open(path, "r") as f:
@@ -223,10 +229,14 @@ class Base():
                 print(path)
         return None
 
-    def saveJson(self,path,content):
+    def saveJson(self, path, content):
         with open(path, "w") as f:
             json.dump(content, f)
 
 if __name__ == '__main__':
-    base=Base('/home/zzm/datasets/coco2017/', 'train2017')
-    base.getCurImageCatsByImgId(37012)
+    base = Base('/home/zzm/datasets/coco2017/', 'train2017')
+    # base.getCurImageCatsByImgId(37012)
+    img_id = base.getImgIdsFromNames(["000000000025.png"])
+    captions = base.load_captions("000000050727.png")
+    print(img_id)
+    print(captions)

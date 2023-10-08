@@ -1,20 +1,15 @@
-from sketch import Sketch
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Created on 2022-04-01 19:13:27
 # @Author: zzm
-
 
 from sketch import Sketch
 
 import argparse
 import os
 from tqdm import tqdm
-import numpy as np  
 
 # 筛选符合预设条件的草图
-
 def seek_sketches_by_cat(path, sketches_json, cat):
     for sketch_json in tqdm(sketches_json):
         sketch = Sketch(sketch_path = os.path.join(path, sketch_json))

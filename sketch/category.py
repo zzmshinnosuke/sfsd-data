@@ -5,7 +5,6 @@
 
 import os
 import json
-from re import I
 # CATEGORIES contains: cati2id get cat_id and color by category, id2cat get category and color by cat_id
 # {'cat2id': {'cloud': {'id': 0, 'color': [0, 191, 255]},...}, 'id2cat': {0: {'category': 'cloud', 'color': [0, 191, 255]},...}}
 

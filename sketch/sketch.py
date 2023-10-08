@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # Created on 2021-07-18 16:13:57
 # @Author: zzm
-
-
 import json
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,9 +10,6 @@ import cv2
 from category import *
 from PIL import Image
 import os
-from pycocotools.coco import COCO
-from shutil import copyfile
-import random
 from tqdm import tqdm as tqdm
 import math
 

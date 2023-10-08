@@ -15,10 +15,6 @@ class LabelPost(Base):
     def __init__(self, label_post_dir, cocoPath, cocoType):
         super().__init__(cocoPath, cocoType)
         self.label_post_dir = label_post_dir
-        
-        # assert os.path.exists(self.config_path),'not find {}'.format(self.config_path)      
-        # with open(self.config_path, "r", encoding='utf-8') as f:
-        #     self.image_files=[line.strip().split(';')[0] for line in f.readlines()][1:]
         self.files = [file for file in os.listdir(self.label_post_dir) if os.path.isfile(os.path.join(self.label_post_dir, file))]
 
     def load_captions(self,image_name):
@@ -85,7 +81,6 @@ class LabelPost(Base):
             sketch['objects'] = new_objects
             self.saveJson(os.path.join(save_dir, name), sketch)
             # self.saveJson(os.path.join(self.save_dir, sketch['reference'].split('.')[0] + '.json'), sketch)
-
 
 
 

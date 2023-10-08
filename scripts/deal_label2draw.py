@@ -4,9 +4,7 @@
 # @Author: zzm
 
 from sketch import Label2Draw
-
 import argparse
-import os
 
 '''
 处理标注完的草图，可以转换为绘制格式，可以再次绘制

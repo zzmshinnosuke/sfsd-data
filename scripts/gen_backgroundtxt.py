@@ -12,7 +12,6 @@ import os
 创建配置文件background_box.txt，用在草图绘制工具和标注工具中
 格式：第一行：图片数；后面每行：图片文件名，boundingbox 左上和右下的坐标以及id
 '''
-
 def gen_background(images_path,config_path):
     images=[file for file in os.listdir(images_path) if os.path.isfile(os.path.join(images_path, file))]
     with open(config_path, mode='w', encoding='utf-8') as f:

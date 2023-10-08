@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 # Created on 2021-07-18 16:13:37
 # @Author: zzm
-
 import os
-import json
 from tqdm import tqdm
 
 from .base import Base

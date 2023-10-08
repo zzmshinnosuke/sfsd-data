@@ -8,4 +8,5 @@ from .labelpost import LabelPost
 from .draw2label import Draw2Label
 from .label2draw import Label2Draw
 from .sketch import Sketch
+from .openSFSD import OpenSFSD
 from .category import get_categories_info
