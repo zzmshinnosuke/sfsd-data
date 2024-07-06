@@ -44,6 +44,7 @@ class OpenSFSD(Base):
             else:
                 if strokeNum > self.sketchimg_names[sketchimg_name]["strokeNum"]:
                     self.sketchimg_names[sketchimg_name] = {"old_name" : file, "strokeNum" : strokeNum}
+        print("quchong:",len(self.sketchimg_names))
         def get_sketchOfLeastStroke(mydict):
             name = ''
             least_stroke_num = sys.maxsize
@@ -53,7 +54,7 @@ class OpenSFSD(Base):
                     name = key
             return name
       
-        while len(self.sketchimg_names) > 12000:
+        while len(self.sketchimg_names) > 12100:
             name = get_sketchOfLeastStroke(self.sketchimg_names)
             del self.sketchimg_names[name]
 
